@@ -4,7 +4,6 @@ on: [push, pull_request]
 name: build-and-test
 
 jobs:
-
   x86_64_freebsd:
     name: Ubuntu 20.04 (for FreeBSD)
     runs-on: ubuntu-20.04
