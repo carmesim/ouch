@@ -4,45 +4,6 @@ on: [push, pull_request]
 name: build-and-test
 
 jobs:
-  x86_64_freebsd:
-    name: Ubuntu 20.04 (for FreeBSD)
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        rust:
-          - stable
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-unknown-freebsd
-          override: true
-
-      - name: Run cargo build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --target x86_64-unknown-freebsd
-
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --release --target x86_64-unknown-freebsd
-
-      - name: Strip binary
-        run: strip target/x86_64-unknown-freebsd/release/ouch
-
-      - name: Upload binary
-        uses: actions/upload-artifact@v2
-        with:
-          name: 'ouch-x86_64-unknown-freebsd'
-          path: target/x86_64-unknown-freebsd/release/ouch
-
   aarch64-glibc:
     name: Ubuntu 18.04 (for ARMv8 - glibc)
     runs-on: ubuntu-18.04
@@ -201,13 +162,10 @@ jobs:
           name: 'ouch-x86_64-unknown-linux-gnu'
           path: target/release/ouch
 
+
   macos:
     name: macOS
     runs-on: macos-latest
-    strategy:
-      matrix:
-        rust:
-          - stable
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -215,7 +173,7 @@ jobs:
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ matrix.rust }}
+          toolchain: stable
           override: true
 
       - name: Run cargo build
@@ -237,6 +195,39 @@ jobs:
         with:
           name: 'ouch-x86_64-apple-darwin'
           path: target/release/ouch
+
+
+
+  macos-for-aarch64:
+    name: macOS (`aarch64`)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: aarch64-apple-darwin
+          override: true
+
+      - name: Run cargo build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target aarch64-apple-darwin
+
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test --target aarch64-apple-darwin
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'ouch-aarch64-apple-darwin'
+          path: target/aarch64-apple-darwin/release/ouch
 
 
   windows-msvc:
