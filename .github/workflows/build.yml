@@ -221,6 +221,7 @@ jobs:
         with:
           command: build
           args: --release --target aarch64-apple-darwin
+          use-cross: true
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
