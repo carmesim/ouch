@@ -214,14 +214,17 @@ jobs:
 
       - name: Switch to latest Xcode
         run: sudo xcode-select --switch /Library/Developer/CommandLineTools/
-          
+        
+
+      - name: Install `bzip2`
+        run: brew install bzip2
 
       - name: Run cargo build
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release --target aarch64-apple-darwin
-          use-cross: true
+          use-cross: false
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
