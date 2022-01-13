@@ -9,6 +9,8 @@ use std::{
 };
 
 use fs_err as fs;
+use rayon::prelude::*;
+
 use utils::colors;
 
 use crate::{
@@ -228,10 +230,10 @@ pub fn run(args: Opts, question_policy: QuestionPolicy) -> crate::Result<()> {
                 PathBuf::from(".")
             };
 
-            for ((input_path, formats), file_name) in files.iter().zip(formats).zip(output_paths) {
+            files.par_iter().zip(formats).zip(output_paths).for_each(|((input_path, formats), file_name)| {
                 let output_file_path = output_dir.join(file_name); // Path used by single file format archives
-                decompress_file(input_path, formats, &output_dir, output_file_path, question_policy)?;
-            }
+                let _ = decompress_file(input_path, formats, &output_dir, output_file_path, question_policy);
+            });
         }
         Subcommand::List { archives: files, tree } => {
             let mut formats = vec![];
