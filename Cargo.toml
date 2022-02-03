@@ -30,6 +30,7 @@ zstd = { version = "0.9.0", default-features = false }
 tempfile = "3.2.0"
 ignore = "0.4.18"
 indicatif = "0.16.2"
+rayon = "1.5.1"
 
 [build-dependencies]
 clap = { version = "3.0.4", features = ["derive", "env"] }
